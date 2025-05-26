@@ -1,0 +1,189 @@
+import java.util.*;
+
+
+
+public class StockTradingPlatform {
+
+    static Map<String, Double> stockMarket = new HashMap<>();
+
+    static Map<String, Integer> portfolio = new HashMap<>();
+
+    static Scanner sc = new Scanner(System.in);
+
+
+
+    public static void main(String[] args) {
+
+        // Initialize some dummy stock data
+
+        stockMarket.put("AAPL", 172.34);
+
+        stockMarket.put("GOOG", 2794.39);
+
+        stockMarket.put("MSFT", 315.26);
+
+
+
+        while (true) {
+
+            System.out.println("\n--- Stock Trading Platform ---");
+
+            System.out.println("1. View Stock Prices");
+
+            System.out.println("2. Buy Stock");
+
+            System.out.println("3. Sell Stock");
+
+            System.out.println("4. View Portfolio");
+
+            System.out.println("5. Exit");
+
+            System.out.print("Choose an option: ");
+
+            int choice = sc.nextInt();
+
+            sc.nextLine();  // Consume newline
+
+
+
+            switch (choice) {
+
+                case 1: viewStockPrices(); break;
+
+                case 2: buyStock(); break;
+
+                case 3: sellStock(); break;
+
+                case 4: viewPortfolio(); break;
+
+                case 5: System.out.println("Exiting..."); return;
+
+                default: System.out.println("Invalid option!");
+
+            }
+
+        }
+
+    }
+
+
+
+    static void viewStockPrices() {
+
+        System.out.println("\nCurrent Stock Prices:");
+
+        for (Map.Entry<String, Double> entry : stockMarket.entrySet()) {
+
+            System.out.printf("%s: $%.2f\n", entry.getKey(), entry.getValue());
+
+        }
+
+    }
+
+
+
+    static void buyStock() {
+
+        System.out.print("Enter stock symbol to buy: ");
+
+        String symbol = sc.nextLine().toUpperCase();
+
+
+
+        if (!stockMarket.containsKey(symbol)) {
+
+            System.out.println("Stock not found.");
+
+            return;
+
+        }
+
+
+
+        System.out.print("Enter quantity to buy: ");
+
+        int qty = sc.nextInt();
+
+        sc.nextLine();  // Consume newline
+
+
+
+        portfolio.put(symbol, portfolio.getOrDefault(symbol, 0) + qty);
+
+        System.out.println("Bought " + qty + " shares of " + symbol);
+
+    }
+
+
+
+    static void sellStock() {
+
+        System.out.print("Enter stock symbol to sell: ");
+
+        String symbol = sc.nextLine().toUpperCase();
+
+
+
+        if (!portfolio.containsKey(symbol)) {
+
+            System.out.println("You don't own any shares of " + symbol);
+
+            return;
+
+        }
+
+
+
+        System.out.print("Enter quantity to sell: ");
+
+        int qty = sc.nextInt();
+
+        sc.nextLine();  // Consume newline
+
+
+
+        int currentQty = portfolio.get(symbol);
+
+        if (qty > currentQty) {
+
+            System.out.println("You only have " + currentQty + " shares.");
+
+        } else {
+
+            portfolio.put(symbol, currentQty - qty);
+
+            if (portfolio.get(symbol) == 0) {
+
+                portfolio.remove(symbol);
+
+            }
+
+            System.out.println("Sold " + qty + " shares of " + symbol);
+
+        }
+
+    }
+
+
+
+    static void viewPortfolio() {
+
+        System.out.println("\nYour Portfolio:");
+
+        if (portfolio.isEmpty()) {
+
+            System.out.println("You don't own any stocks yet.");
+
+        } else {
+
+            for (Map.Entry<String, Integer> entry : portfolio.entrySet()) {
+
+                System.out.println(entry.getKey() + ": " + entry.getValue() + " shares");
+
+            }
+
+        }
+
+    }
+
+}
